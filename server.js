@@ -3,8 +3,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const connectDb = require("../server/config/db");
+const entryRoutes = require("../server/routes/entry");
 const port = 5000;
 const app = express();
+
+app.use('/entry',entryRoutes);
 
 //the limit is set to 30mb to help limit sized of images to be parsed.
 app.use(bodyParser.json({ limit: "30mb", extended: true }));

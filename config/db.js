@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const config = require("config");
 
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri = `mongodb+srv://ralphagbara:D8fnpN8QWTpiOK3J@cluster0.k3vhkk7.mongodb.net/?retryWrites=true&w=majority`;

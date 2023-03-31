@@ -1,0 +1,5 @@
+const getEntries = (req, res) => {
+  res.send("welcome to diary entry page");
+};
+
+module.exports = {getEntries};

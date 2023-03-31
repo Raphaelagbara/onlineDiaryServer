@@ -1,5 +1,35 @@
-const getEntries = (req, res) => {
-  res.send("welcome to diary entry page");
+const entryRecord = require("../models/entryRecord.js");
+
+const getEntries = async (req, res) => {
+  try {
+    const postEntries = await entryRecord.find();
+
+    console.log(postEntries);
+
+    res.status(200).json(postEntries);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };
 
-module.exports = {getEntries};
+const createEntries = async (req, res) => {
+  const { title, message, selectedFile, creator, tags } = req.body;
+
+  const newEntryRecord = new entryRecord({
+    title,
+    message,
+    selectedFile,
+    creator,
+    tags,
+  });
+
+  try {
+    await newEntryRecord.save();
+
+    res.status(201).json(newEntryRecord);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+};
+
+module.exports = { getEntries, createEntries };

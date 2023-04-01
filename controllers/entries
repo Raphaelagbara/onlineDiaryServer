@@ -1,5 +1,6 @@
 const entryRecord = require("../models/entryRecord.js");
 
+//to view all entries
 const getEntries = async (req, res) => {
   try {
     const postEntries = await entryRecord.find();
@@ -12,6 +13,7 @@ const getEntries = async (req, res) => {
   }
 };
 
+//to create and save new entry
 const createEntries = async (req, res) => {
   const { title, message, selectedFile, creator, tags } = req.body;
 
@@ -32,4 +34,55 @@ const createEntries = async (req, res) => {
   }
 };
 
-module.exports = { getEntries, createEntries };
+//to update existing entry
+const updateEntry = async (req, res) => {
+  const { id } = req.params;
+  const { title, message, creator, selectedFile, tags } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+
+  const updatedEntry = { creator, title, message, tags, selectedFile, _id: id };
+
+  await entryRecord.findByIdAndUpdate(id, updatedEntry, { new: true });
+
+  res.json(updatedEntry);
+};
+
+//delete entry logic
+const deleteEntry = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+
+  await PostMessage.findByIdAndRemove(id);
+
+  res.json({ message: "Post deleted successfully." });
+};
+
+//like post logic
+const likePost = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+
+  const post = await PostMessage.findById(id);
+
+  const updatedPost = await entryRecord.findByIdAndUpdate(
+    id,
+    { likeCount: post.likeCount + 1 },
+    { new: true }
+  );
+
+  res.json(updatedEntry);
+};
+
+module.exports = {
+  getEntries,
+  createEntries,
+  updateEntry,
+  deleteEntry,
+  likePost,
+};
